@@ -1,7 +1,11 @@
 apply plugin: "com.android.application"
 apply plugin: "com.facebook.react"
 
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-parcelize'
+
 import com.android.build.OutputFile
+import groovy.json.JsonSlurper
 
 /**
  * This is the configuration block to customize your React Native Android app.
@@ -85,21 +89,54 @@ def jscFlavor = 'org.webkit:android-jsc:+'
  */
 def reactNativeArchitectures() {
     def value = project.getProperties().get("reactNativeArchitectures")
-    return value ? value.split(",") : ["armeabi-v7a", "x86", "x86_64", "arm64-v8a"]
+    return value ? value.split(",") : ["armeabi-v7a", "arm64-v8a"]
 }
+
+static def getNpmVersion() {
+    def inputFile = new File("../package.json")
+    def packageJson = new JsonSlurper().parseText(inputFile.text)
+    return packageJson["version"]
+}
+
+/* calculated from git commits to give sequential integers */
+
+static def getGitVersion() {
+    def process = "git rev-list --count main".execute()
+    return process.text.toInteger()
+}
+
+def userVer = getNpmVersion()
+
+def googleVer = getGitVersion()
 
 android {
     ndkVersion rootProject.ext.ndkVersion
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
+    // recommended java version
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    kotlinOptions {
+        jvmTarget=11
+    }
+
+    // recommended java version
+
     namespace "com.rncodepush"
     defaultConfig {
         applicationId "com.rncodepush"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode googleVer
+        versionName userVer
+        archivesBaseName = "$applicationId-v$versionName" + "." + "$versionCode"
+        ndk {
+            abiFilters "armeabi-v7a", "arm64-v8a"
+        }
     }
 
     splits {
@@ -117,6 +154,18 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        release {
+            def keystorePropertiesFile = rootProject.file('app/rncodepush.keystore.properties')
+            if (keystorePropertiesFile.exists()) {
+                def keystoreProperties = new Properties()
+                keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+                storeFile file(keystoreProperties['key.store'])
+                storePassword keystoreProperties['key.store.password']
+                keyAlias keystoreProperties['key.alias']
+                keyPassword keystoreProperties['key.alias.password']
+            }
+        }
     }
     buildTypes {
         debug {
@@ -125,10 +174,17 @@ android {
         release {
             // Caution! In production, you need to generate your own keystore file.
             // see https://reactnative.dev/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
+            debuggable false
+            shrinkResources true
+            zipAlignEnabled true
+            signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
+    }
+
+    buildFeatures {
+        viewBinding true
     }
 
     // applicationVariants are e.g. debug, release
@@ -137,7 +193,7 @@ android {
             // For each separate APK per architecture, set a unique version code as described here:
             // https://developer.android.com/studio/build/configure-apk-splits.html
             // Example: versionCode 1 will generate 1001 for armeabi-v7a, 1002 for x86, etc.
-            def versionCodes = ["armeabi-v7a": 1, "x86": 2, "arm64-v8a": 3, "x86_64": 4]
+            def versionCodes = ["armeabi-v7a": 1, "arm64-v8a": 2]
             def abi = output.getFilter(OutputFile.ABI)
             if (abi != null) {  // null for the universal-debug, universal-release variants
                 output.versionCodeOverride =
@@ -149,6 +205,18 @@ android {
 }
 
 dependencies {
+    def activity_version = "1.6.1"
+    def fragment_version = "1.5.4"
+
+    // Kotlin
+    implementation "androidx.activity:activity-ktx:$activity_version"
+    implementation "androidx.fragment:fragment-ktx:$fragment_version"
+
+    // Testing Fragments in Isolation
+    debugImplementation "androidx.fragment:fragment-testing:$fragment_version"
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
 

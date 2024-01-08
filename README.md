@@ -53,4 +53,6 @@ To learn more about React Native, take a look at the following resources:
 ### References
 
 - [CodePush - PagePro Blog](https://pagepro.co/blog/react-native-over-the-air-updates/)
+- [CodePush - ReactNative](https://learn.microsoft.com/en-us/appcenter/distribution/codepush/rn-overview)
+- [CodePush - Releasing Updates](https://learn.microsoft.com/en-us/appcenter/distribution/codepush/rn-updates)
 

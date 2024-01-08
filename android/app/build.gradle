@@ -171,6 +171,13 @@ android {
         debug {
             shrinkResources false
             signingConfig signingConfigs.debug
+            resValue "string", "CodePushDeploymentKey", '""'
+        }
+        releaseStaging {
+            resValue "string", "CodePushDeploymentKey", '"yAiNbuOeOjpwIYI--VCCE_h1JBE7b_5SBuMJx"'
+            // Note: It's a good idea to provide matchingFallbacks for the new buildType you create to prevent build issues
+            // Add the following line if not already there
+            matchingFallbacks = ['release']
         }
         release {
             // Caution! In production, you need to generate your own keystore file.
@@ -180,6 +187,7 @@ android {
             zipAlignEnabled true
             signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
+            resValue "string", "CodePushDeploymentKey", '"HcTWz6sC3OnkIn_tyINUo3ns6bDXkazVZloWY"'
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }

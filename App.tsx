@@ -118,4 +118,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default codePush(App);
+export default codePush({
+  updateDialog: true,
+  installMode: codePush.InstallMode.IMMEDIATE,
+})(App);

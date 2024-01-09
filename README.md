@@ -35,6 +35,17 @@ Now that you have successfully run the app, let's modify it.
 1. Open `App.tsx` in your text editor of choice and edit some lines.
 2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
    For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
+
+## Deploying JS Bundle updates
+Deploying your js bundle updates is quite easy using appcenter.
+### For Staging
+```bash
+appcenter codepush release-react -a <app owner>/<app name> -d Staging --target-binary-version "<app version target>"
+```
+### For Production
+```bash
+appcenter codepush release-react -a <app owner>/<app name> -d Production --target-binary-version "<app version target>"
+```
 ## Congratulations! :tada:
 You've successfully run and modified your React Native App. :partying_face:
 ### Now what?

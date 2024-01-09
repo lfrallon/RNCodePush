@@ -35,6 +35,10 @@ rncodepush.keystore.properties
 *.keystore
 !debug.keystore
 
+# AppCenter JSON
+#
+appcenter-config.json
+
 # node.js
 #
 node_modules/

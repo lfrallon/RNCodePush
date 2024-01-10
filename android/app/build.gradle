@@ -174,8 +174,15 @@ android {
             signingConfig signingConfigs.debug
             resValue "string", "CodePushDeploymentKey", '"yAiNbuOeOjpwIYI--VCCE_h1JBE7b_5SBuMJx"'
         }
-        releaseStaging {
+        staging {
+            debuggable false
+            shrinkResources true
+            zipAlignEnabled true
+            signingConfig signingConfigs.release
+            minifyEnabled enableProguardInReleaseBuilds
+            applicationIdSuffix ".staging"
             resValue "string", "CodePushDeploymentKey", '"yAiNbuOeOjpwIYI--VCCE_h1JBE7b_5SBuMJx"'
+            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
             // Note: It's a good idea to provide matchingFallbacks for the new buildType you create to prevent build issues
             // Add the following line if not already there
             matchingFallbacks = ['release']
@@ -188,6 +195,7 @@ android {
             zipAlignEnabled true
             signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
+            applicationIdSuffix ".release"
             resValue "string", "CodePushDeploymentKey", '"HcTWz6sC3OnkIn_tyINUo3ns6bDXkazVZloWY"'
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }

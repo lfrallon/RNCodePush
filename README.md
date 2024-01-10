@@ -46,6 +46,14 @@ appcenter codepush release-react -a <app owner>/<app name> -d Staging --target-b
 ```bash
 appcenter codepush release-react -a <app owner>/<app name> -d Production --target-binary-version "<app version target>"
 ```
+### For Deployment History
+```bash
+appcenter codepush deployment history -a <ownerName>/<appName> <DeploymentName>
+```
+### For Rollback
+```bash
+appcenter codepush rollback -a <ownerName>/<appName> <DeploymentName> --target-release <Label>
+```
 ## Congratulations! :tada:
 You've successfully run and modified your React Native App. :partying_face:
 ### Now what?

@@ -172,7 +172,7 @@ android {
         debug {
             shrinkResources false
             signingConfig signingConfigs.debug
-            resValue "string", "CodePushDeploymentKey", '"yAiNbuOeOjpwIYI--VCCE_h1JBE7b_5SBuMJx"'
+            resValue "string", "CodePushDeploymentKey", '""'
         }
         staging {
             debuggable false
